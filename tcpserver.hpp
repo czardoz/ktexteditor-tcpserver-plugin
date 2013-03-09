@@ -9,6 +9,7 @@
 #include <QtCore/QEvent>
 #include <QtCore/QObject>
 #include <QtCore/QList>
+#include <QtNetwork>
 
 class TCPServerPlugin
   : public KTextEditor::Plugin
@@ -16,7 +17,7 @@ class TCPServerPlugin
     public:
 
         explicit TCPServerPlugin(QObject *parent, 
-								 const QVariantList &args);
+                                 const QVariantList &args);
 
         virtual ~TCPServerPlugin();
         void addView (KTextEditor::View *view);
@@ -30,7 +31,7 @@ class TCPServerPlugin
 };
 
 class TCPServerPluginView
-	: public QObject, public KXMLGUIClient
+    : public QObject, public KXMLGUIClient
 {
     Q_OBJECT
 
@@ -40,9 +41,14 @@ class TCPServerPluginView
 
     private Q_SLOTS:
         void slotInsertText();
-
+        void slotHandleConnection();
+        void slotGetData();
+        void slotDisconnected();
+        
     private:
         KTextEditor::View *m_view;
+        QTcpServer *srv;
+        QTcpSocket *clientSocket;
 };
 
 #endif

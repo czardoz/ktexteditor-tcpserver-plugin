@@ -63,6 +63,16 @@ TCPServerPluginView::TCPServerPluginView(KTextEditor::View *view)
     actionCollection()->addAction("tools_insert_chars", action);
     action->setShortcut(Qt::CTRL + Qt::Key_M);
     connect(action, SIGNAL(triggered()), this, SLOT(slotInsertText()));
+    srv = new QTcpServer(this);
+    srv->listen(QHostAddress::Any, 3000);
+    connect(srv, SIGNAL(newConnection()), this, SLOT(slotHandleConnection()));
+    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+
+    for(int i=0; i<ipAddressesList.size(); i++)
+    {
+        kDebug() << ipAddressesList.at(i).toString();
+    }
+
     setXMLFile("tcpserverui.rc");
 }
 
@@ -74,6 +84,28 @@ void TCPServerPluginView::slotInsertText()
 {
     kDebug() << "Server!";
     m_view->document()->insertText(m_view->cursorPosition(), QString("Awesome server"));
+}
+
+void TCPServerPluginView::slotHandleConnection()
+{
+    clientSocket = srv->nextPendingConnection();
+    connect(clientSocket, SIGNAL(readyRead()), this, SLOT(slotGetData()));
+    connect(clientSocket, SIGNAL(disconnected()), clientSocket, SLOT(deleteLater()));
+    connect(clientSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
+
+}
+
+void TCPServerPluginView::slotGetData()
+{
+    QByteArray data;
+    data = clientSocket->readAll();
+    kDebug() << data;
+    m_view->document()->insertText(m_view->cursorPosition(), QString(data));
+}
+
+void TCPServerPluginView::slotDisconnected()
+{
+    kDebug() << "Socket Disconnected, ready for new connection";
 }
 
 #include "tcpserver.moc"
