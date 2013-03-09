@@ -1,0 +1,19 @@
+[Desktop Entry]
+Encoding=UTF-8
+X-KDE-Library=ktexteditor-tcpserver
+X-KDE-PluginInfo-Author=Aniket Panse
+X-KDE-PluginInfo-Email=contact@aniketpanse.in
+X-KDE-PluginInfo-Name=ktexteditortcpserver
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://kate.kde.org
+X-KDE-PluginInfo-Category=Editor
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-ParentApp=kate
+X-KDE-Version=4.0
+ServiceTypes=KTextEditor/Plugin
+Type=Service
+Icon=korganizer
+Name=TCP Server
+Comment=Inserts data from a TCP socket.
